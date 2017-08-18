@@ -92,22 +92,29 @@ namespace Autotader
 
         static void ProcessData(string href, string make)
         {
-            var web = new HtmlWeb();
-            var doc = web.Load("http://www.autotrader.co.uk" + href).DocumentNode;
-
-            var model = doc.SelectSingleNode("//span[@class=\"pricetitle__advertTitle\"]");
-            var price = doc.SelectSingleNode("//section[@class=\"priceTitle__price gui-advert-price\"]");
-            var mileage = doc.SelectSingleNode("//li[@class=\"keyFacts__item\"][3]");
-            var phone = doc.SelectSingleNode("//div[@itemprop=\"telephone\"]");
-
-            _result.Add(new Data
+            try
             {
-                Make = make,
-                Model = model.InnerText,
-                Price = price.InnerText,
-                Mileage = mileage.InnerText,
-                Phone = phone.InnerText
-            });
+                var web = new HtmlWeb();
+                var doc = web.Load("http://www.autotrader.co.uk" + href).DocumentNode;
+
+                var model = doc.SelectSingleNode("//span[@class=\"pricetitle__advertTitle\"]");
+                var price = doc.SelectSingleNode("//section[@class=\"priceTitle__price gui-advert-price\"]");
+                var mileage = doc.SelectSingleNode("//li[@class=\"keyFacts__item\"][3]");
+                var phone = doc.SelectSingleNode("//div[@itemprop=\"telephone\"]");
+
+                _result.Add(new Data
+                {
+                    Make = make,
+                    Model = model.InnerText,
+                    Price = price.InnerText,
+                    Mileage = mileage.InnerText,
+                    Phone = phone.InnerText
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error on {make}: {ex}");
+            }
         }
     }
 }
